@@ -1,13 +1,16 @@
 import React from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Login from "../screens/Login";
+import Register from "../screens/Register";
+import Home from "../screens/Home";
 
 export const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home Page</div>} />
-        <Route path="/login" element={<div>Login Page</div>} />
-        <Route path="/register" element={<div>Register Page</div>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

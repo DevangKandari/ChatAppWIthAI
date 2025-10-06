@@ -7,10 +7,12 @@ export const createUserController = async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
+    console.log(errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
   try {
     const user = await userService.createUser(req.body);
+    delete user._doc.password;
     const token = user.generateJWT();
     res.status(201).send({ user, token });
   } catch (error) {
@@ -34,6 +36,7 @@ export const loginController = async (req, res) => {
       return res.status(401).json({ errors: "Invalid email or password" });
     }
     const token = foundUser.generateJWT();
+    delete foundUser._doc.password;
     res.status(200).send({ user: foundUser, token });
   } catch (error) {
     res.status(500).send(error.message);
@@ -52,5 +55,16 @@ export const logoutController = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).send(err.message);
+  }
+};
+
+export const getAllUsersController = async (req, res) => {
+  try {
+    const loggedInUser = await user.findOne({ email: req.user.email });
+    const loggedInUserId = loggedInUser._id;
+    const users = await userService.getAllUsers({ userId: loggedInUserId });
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 };
